@@ -84,13 +84,8 @@ endif()
 set(maps_SRCS "${PROJECT_SOURCE_DIR}/maps/")
 set(fonts_SRCS "${PROJECT_SOURCE_DIR}/fonts/")
 
-add_library(pugi ${pugi_HDRS} ${pugi_SRCS})
-if(BUILD_SHARED_LIBS)
-  add_library(${PROJECT_NAME} SHARED ${tmx_HDRS} ${tmx_SRCS})
-else()
-  add_library(${PROJECT_NAME} STATIC ${tmx_HDRS} ${tmx_SRCS})
-endif()
-
+add_library(pugi STATIC ${pugi_HDRS} ${pugi_SRCS})
+add_library(${PROJECT_NAME} STATIC ${tmx_HDRS} ${tmx_SRCS})
 
 find_package(SFML 2 REQUIRED graphics window system)
 
@@ -134,15 +129,6 @@ if(BUILD_SHARED_LIBS)
     if(WIN32)
         set_target_properties(pugi PROPERTIES DEBUG_POSTFIX -d)
         set_target_properties(tmx-loader PROPERTIES DEBUG_POSTFIX -d)
-        
-        if(CMAKE_COMPILER_IS_GNUCXX)
-            # on Windows/gcc get rid of "lib" prefix for shared libraries,
-            # and transform the ".dll.a" suffix into ".a" for import libraries
-            set_target_properties(pugi PROPERTIES PREFIX "")
-            set_target_properties(tmx-loader PROPERTIES PREFIX "")
-            set_target_properties(pugi PROPERTIES IMPORT_SUFFIX ".a")
-            set_target_properties(tmx-loader PROPERTIES IMPORT_SUFFIX ".a")
-        endif()
     endif()
 else()
     set_target_properties(pugi PROPERTIES DEBUG_POSTFIX -s-d)
